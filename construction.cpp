@@ -8,7 +8,6 @@
 #include "skill.h"
 #include "crafting.h" // For the use_comps use_tools functions
 
-#define PICKUP_RANGE 2
 
 bool will_flood_stop(map *m, bool fill[SEEX * MAPSIZE][SEEY * MAPSIZE],
                      int x, int y);
@@ -131,6 +130,10 @@ void game::init_construction()
    COMP(itm_2x4, 8, NULL);
    COMP(itm_nail, 40, NULL);
 
+ CONSTRUCT("Start vehicle construction", 0, &construct::able_empty, &construct::done_vehicle);
+  STAGE(t_null, 10);
+   COMP(itm_frame, 1, NULL);
+
 }
 
 void game::construction_menu()
@@ -192,7 +195,7 @@ void game::construction_menu()
     nc_color color_stage = (player_can_build(u, total_inv, current_con, n) ?
                             c_white : c_dkgray);
     mvwprintz(w_con, posy, 31, color_stage, "Stage %d: %s", n + 1,
-              terlist[current_con->stages[n].terrain].name.c_str());
+              current_con->stages[n].terrain == t_null? "" : terlist[current_con->stages[n].terrain].name.c_str());
     posy++;
 // Print tools
     construction_stage stage = current_con->stages[n];
@@ -448,7 +451,8 @@ void game::complete_construction()
  
 // Make the terrain change
  int terx = u.activity.placement.x, tery = u.activity.placement.y;
- m.ter(terx, tery) = stage.terrain;
+ if (stage.terrain != t_null)
+  m.ter(terx, tery) = stage.terrain;
  construct effects;
  (effects.*(built->done))(this, point(terx, tery));
 
@@ -568,4 +572,17 @@ void construct::done_fill_pit(game *g, point p)
 void construct::done_window_pane(game *g, point p)
 {
  g->m.add_item(g->u.posx, g->u.posy, g->itypes[itm_glass_sheet], 0);
+}
+
+void construct::done_vehicle(game *g, point p)
+{
+    std::string name = string_input_popup(20, "Enter new vehicle name");
+    vehicle *veh = g->m.add_vehicle (g, veh_custom, p.x, p.y, 270);
+    if (!veh)
+    {
+        debugmsg ("error constructing vehicle");
+        return;
+    }
+    veh->name = name;
+    veh->install_part (0, 0, vp_frame_v2);
 }

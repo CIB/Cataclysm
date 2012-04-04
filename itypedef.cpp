@@ -689,9 +689,11 @@ MELEE("chunk of steel", 30, 10, ',', c_ltblue,	STEEL,	MNULL,
 A misshapen chunk of steel.  Makes a decent weapon in a pinch, and is also\n\
 useful for some crafting recipes.");
 
-MELEE("electric motor",  2,120, ',', c_ltcyan,	IRON,	MNULL,
-	 4,  6,  4,  0,  0, 0, "\
-A powerful electric motor.  Useful for crafting.");
+//    NAME      RAR PRC SYM COLOR   MAT1    MAT2
+MELEE("lump of steel", 30, 20, ',', c_ltblue,  STEEL,  MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+     2,  80, 18,  0, -4, 0, "\
+A misshapen heavy piece of steel.  Useful for some crafting recipes.");
 
 MELEE("rubber hose",	15, 80, ',', c_green,	PLASTIC,MNULL,
 	 3,  2,  4,  0,  3, mfb(IF_WRAP), "\
@@ -917,6 +919,124 @@ travels.");
 MELEE("USB drive",	 5, 100,',', c_white,	PLASTIC,MNULL,
 	  0,  0,  0,  0,  0, 0, "\
 A USB thumb drive.  Useful for holding software.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("steel frame",  25, 35, ',', c_cyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    60,  240,  20,  0,  -5, 0, "\
+A large frame made of steel.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("wheel",  15, 50, '0', c_black,  STEEL,   PLASTIC,
+//  VOL WGT DAM CUT HIT FLAGS
+    10,  80,  8,  0,  -4, 0, "\
+A wheel, perhaps from some car.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("large wheel",  6, 80, '0', c_black,  STEEL,   PLASTIC,
+//  VOL WGT DAM CUT HIT FLAGS
+    20,  200,  12,  0,  -5, 0, "\
+A large wheel, from some big car.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("seat",  8, 250, '0', c_red,  PLASTIC,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    30,  80,  4,  0,  -4, 0, "\
+A soft car seat covered with leather.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("vehicle controls",  3, 400, '$', c_ltcyan,  PLASTIC,   STEEL,
+//  VOL WGT DAM CUT HIT FLAGS
+    12,  30,  2,  0,  -4, 0, "\
+A set of various vehicle controls.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("1L combustion engine",  5, 150, ',', c_ltcyan,  IRON,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    6,  160,  8,  0,  -2, 0, "\
+A small, yet powerful 2-cylinder combustion engine.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("2.5L combustion engine",  4, 180, ',', c_ltcyan,  IRON,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    14,  400,  12,  0,  -3, 0, "\
+A powerful 4-cylinder combustion engine.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("6L combustion engine",  2, 250, ',', c_ltcyan,  IRON,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    25,  1100,  15,  0,  -5, 0, "\
+A large and very powerful 8-cylinder combustion engine.  Useful for\n\
+crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("electric motor",  2,120, ',', c_ltcyan,  IRON,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    6,  80,  4,  0,  0, 0, "\
+A powerful electric motor.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("large electric motor",  1,220, ',', c_ltcyan,  IRON,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    15,  650,  9,  0,  -3, 0, "\
+A large and very powerful electric motor.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("plasma engine",  1, 900, ',', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    12,  350,  7,  0,  -2, 0, "\
+High technology engine, working on hydrgen fuel.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("metal tank",  10, 40, '{', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    18,  25,  3,  0,  -2, 0, "\
+A metal tank for holding liquids.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("storage battery",  6, 80, ',', c_ltcyan,  IRON,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    8,  220,  6,  0,  -2, 0, "\
+A large storage battery.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("minireactor",  1, 900, ',', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    6,  250,  11,  0,  -4, 0, "\
+A small portable plutonium reactor. Handle with great care!");
+
+//      NAME          RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("solar panel",  3, 900, '#', c_yellow,  GLASS,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    12,  4,  1,  0,  -4, 0, "\
+Electronic device which can convert solar radiation into electric\n\
+power.  Useful for crafting.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("steel plating",  30, 120, ',', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    12,  600,  6,  0,  -1, 0, "\
+A piece of armor plating made of steel.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("superalloy plating",  10, 185, ',', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    12,  350,  6,  0,  -1, 0, "\
+A piece of armor plating made of sturdy superalloy.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("spiked plating",  15, 185, ',', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    14,  600,  6,  3,  -1, 0, "\
+A piece of armor plating made of steel. It is covered by menacing\n\
+spikes.");
+
+//      NAME           RAR PRC SYM COLOR        MAT1    MAT2
+MELEE("hard plating",  30, 160, ',', c_ltcyan,  STEEL,   MNULL,
+//  VOL WGT DAM CUT HIT FLAGS
+    12,  1800,  6,  0,  -1, 0, "\
+A piece of very thick armor plating made of steel.");
+
 
 // ARMOR
 #define ARMOR(name,rarity,price,color,mat1,mat2,volume,wgt,dam,to_hit,\
@@ -2429,8 +2549,8 @@ BOOK("TIME magazine",		35,  40,c_pink,		PAPER,	MNULL,
 Current events concerning a bunch of people who're all (un)dead now.");
 
 BOOK("Top Gear magazine",	40,  45,c_pink,		PAPER,	MNULL,
-    1,  1, -3,  1,	sk_mechanics,	 1,  0,  1,  2,  8, "\
-Lots of articles about cars and mechanics.  You might learn a little.");
+    1,  1, -3,  1,	sk_driving,	 1,  0,  1,  2,  8, "\
+Lots of articles about cars and driving techniques.");
 
 BOOK("Bon Appetit",		30,  45,c_pink,		PAPER,	MNULL,
     1,  1, -3,  1,	sk_cooking,	 1,  0,  1,  5,  8, "\
@@ -3010,6 +3130,13 @@ mfb(IF_SPEAR), "\
 A tool for drawing blood, including a vacuum-sealed test tube for holding the\n\
 sample.  Use this tool to draw blood, either from yourself or from a corpse\n\
 you are standing on.");
+
+//  NAME        RAR PRC SYM  COLOR  MAT1    MAT
+TOOL("welder",   10,900,';', c_ltred,  IRON,MNULL,
+// VOL WGT DAM CUT HIT   MAX    DEF  USE SEC   FUEL    REVERT    FUNCTION
+     6,  24,  7,  0, -1,  1000,  300,  50,  0, AT_BATT, itm_null, &iuse::none,
+0, "\
+A tool for welding metal pieces together.  Useful for construction.");
 
 // BIONICS
 // These are the modules used to install new bionics in the player.  They're

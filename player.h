@@ -121,6 +121,8 @@ public:
  void heal(hp_part healed, int dam);
  void healall(int dam);
  void hurtall(int dam);
+ // checks armor. if vary > 0, then damage to parts are random within 'vary' percent (1-100)
+ void hitall(game *g, int dam, int vary = 0);
 
  int hp_percentage();	// % of HP remaining, overall
 
@@ -208,6 +210,7 @@ public:
 
 // ---------------VALUES-----------------
  int posx, posy;
+ bool in_vehicle;       // Means player sit inside vehicle on the tile he is now
  player_activity activity;
 // _missions vectors are of mission IDs
  std::vector<int> active_missions;
@@ -231,6 +234,7 @@ public:
  bool can_dodge;
  int oxygen;
  unsigned int recoil;
+ unsigned int driving_recoil;
  unsigned int scent;
  int stim, pain, pkill, radiation;
  int cash;

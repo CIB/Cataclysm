@@ -28,6 +28,8 @@
 #define BULLET_SPEED 10000000
 #define EXPLOSION_SPEED 70000000
 
+#define PICKUP_RANGE 2
+
 enum tut_type {
  TUT_NULL,
  TUT_BASIC, TUT_COMBAT,
@@ -86,6 +88,7 @@ class game
 // Move the player vertically, if (force) then they fell
   void vertical_move(int z, bool force);
   void use_computer(int x, int y);
+  bool pl_refill_vehicle (vehicle &veh, int part, bool test=false);
   void resonance_cascade(int x, int y);
   void emp_blast(int x, int y);
   int  npc_at(int x, int y);	// Index of the npc at (x, y); -1 for none
@@ -126,6 +129,9 @@ class game
 
   void teleport(player *p = NULL);
   void plswim(int x, int y); // Called by plmove.  Handles swimming
+  // when player is thrown (by impact or something)
+  void fling_player_or_monster(player *p, monster *zz, int dir, int flvel);
+
   void nuke(int x, int y);
   std::vector<faction *> factions_at(int x, int y);
   int& scent(int x, int y);
@@ -158,6 +164,7 @@ class game
 
   std::vector <itype*> itypes;
   std::vector <mtype*> mtypes;
+  std::vector <vehicle*> vtypes;
   std::vector <trap*> traps;
   std::vector <itype_id> mapitems[num_itloc]; // Items at various map types
   std::vector <items_location_and_chance> monitems[num_monsters];
@@ -183,7 +190,7 @@ class game
   ter_id dragging;
   std::vector<item> items_dragged;
   int weight_dragged; // Computed once, when you start dragging
-  bool debugmon;
+  bool debugmon; 
 // Display data... TODO: Make this more portable?
   WINDOW *w_terrain;
   WINDOW *w_minimap;
@@ -211,6 +218,7 @@ class game
   void init_construction(); // Initializes construction "recipes"
   void init_missions();     // Initializes mission templates
   void init_mutations();    // Initializes mutation "tech tree"
+  void init_vehicles();     // Initializes vehicle types
 
   void create_factions();   // Creates new factions (for a new game world)
   void create_starting_npcs(); // Creates NPCs that start near you
@@ -220,6 +228,7 @@ class game
   void monster_wish(); // Create a monster
   void mutation_wish(); // Mutate
 
+  void pldrive(int x, int y); // drive vehicle
   void plmove(int x, int y); // Standard movement; handles attacks, traps, &c
   void wait();	// Long wait (player action)	'^'
   void open();	// Open a door			'o'
@@ -235,7 +244,12 @@ class game
                         int level = -1, bool cont = false);
   void place_construction(constructable *con); // See construction.cpp
   void complete_construction();               // See construction.cpp
+  bool pl_choose_vehicle (int &x, int &y);
+  bool vehicle_near ();
+  void handbrake ();
   void examine();// Examine nearby terrain	'e'
+  // open vehicle interaction screen
+  void exam_vehicle(vehicle &veh, int examx, int examy, int cx=0, int cy=0);
   void pickup(int posx, int posy, int min);// Pickup items; ',' or via examine()
 // Pick where to put liquid; false if it's left where it was
   bool handle_liquid(item &liquid, bool from_ground, bool infinite);

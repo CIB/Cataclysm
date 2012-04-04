@@ -1171,7 +1171,7 @@ void map::draw_map(oter_id terrain_type, oter_id t_north, oter_id t_east,
 
  case ot_s_lot:
   for (int i = 0; i < SEEX * 2; i++) {
-   for (int j = 0; j < SEEX * 2; j++) {
+   for (int j = 0; j < SEEY * 2; j++) {
     if ((j == 5 || j == 9 || j == 13 || j == 17 || j == 21) &&
         ((i > 1 && i < 8) || (i > 14 && i < SEEX * 2 - 2)))
      ter(i, j) = t_pavement_y;
@@ -1181,6 +1181,15 @@ void map::draw_map(oter_id terrain_type, oter_id t_north, oter_id t_east,
     else
      ter(i, j) = grass_or_dirt();
    }
+  }
+  if (one_in(3))
+  {
+      int vx = rng (0, 3) * 4 + 5;
+      int vy = 4;
+      vhtype_id vt = (one_in(10)? veh_sandbike :
+                     (one_in(8)? veh_truck :
+                     (one_in(3)? veh_car : veh_motorcycle)));
+      add_vehicle (g, vt, vx, vy, one_in(2)? 90 : 270);
   }
   place_items(mi_road, 8, 0, 0, SEEX * 2 - 1, SEEY * 2 - 1, false, turn);
   if (t_east  >= ot_road_null && t_east  <= ot_road_nesw_manhole)
@@ -6115,6 +6124,32 @@ void map::add_spawn(monster *mon)
            mon->faction_id, mon->mission_id, spawnname);
 }
 
+vehicle *map::add_vehicle(game *g, vhtype_id type, int x, int y, int dir)
+{
+ if (x < 0 || x >= SEEX * my_MAPSIZE || y < 0 || y >= SEEY * my_MAPSIZE) {
+  debugmsg("Bad add_vehicle t=%d d=%d x=%d y=%d", type, dir, x, y);
+  return 0;
+ }
+// debugmsg("add_vehicle t=%d d=%d x=%d y=%d", type, dir, x, y);
+ int smx = x / SEEX;
+ int smy = y / SEEY;
+ int nonant = smx + smy * my_MAPSIZE;
+ x %= SEEX;
+ y %= SEEY;
+// debugmsg("n=%d x=%d y=%d MAPSIZE=%d ^2=%d", nonant, x, y, MAPSIZE, MAPSIZE*MAPSIZE);
+ vehicle veh(g, type);
+ veh.posx = x;
+ veh.posy = y;
+ veh.smx = smx;
+ veh.smy = smy;
+ veh.face.init(dir);
+ veh.turn_dir = dir;
+ veh.precalc_mounts (0, dir);
+ grid[nonant].vehicles.push_back(veh);
+ //debugmsg ("grid[%d].vehicles.size=%d veh.parts.size=%d", nonant, grid[nonant].vehicles.size(),veh.parts.size());
+ return &grid[nonant].vehicles[grid[nonant].vehicles.size()-1];
+}
+
 computer* map::add_computer(int x, int y, std::string name, int security)
 {
  ter(x, y) = t_console; // TODO: Turn this off?
@@ -6142,6 +6177,7 @@ void map::rotate(int turns)
  std::vector<item> itrot[SEEX*2][SEEY*2];
  std::vector<spawn_point> sprot[my_MAPSIZE * my_MAPSIZE];
  computer tmpcomp;
+ std::vector<vehicle> tmpveh;
 
  switch (turns) {
  case 1:
@@ -6173,6 +6209,12 @@ void map::rotate(int turns)
   grid[my_MAPSIZE].comp = grid[my_MAPSIZE + 1].comp;
   grid[my_MAPSIZE + 1].comp = grid[1].comp;
   grid[1].comp = tmpcomp;
+// ...and vehicles
+  tmpveh = grid[0].vehicles;
+  grid[0].vehicles = grid[my_MAPSIZE].vehicles;
+  grid[my_MAPSIZE].vehicles = grid[my_MAPSIZE + 1].vehicles;
+  grid[my_MAPSIZE + 1].vehicles = grid[1].vehicles;
+  grid[1].vehicles = tmpveh;
   break;
     
  case 2:
@@ -6204,6 +6246,13 @@ void map::rotate(int turns)
   tmpcomp = grid[1].comp;
   grid[1].comp = grid[my_MAPSIZE].comp;
   grid[my_MAPSIZE].comp = tmpcomp;
+// ...and vehicles
+  tmpveh = grid[0].vehicles;
+  grid[0].vehicles = grid[my_MAPSIZE + 1].vehicles;
+  grid[my_MAPSIZE + 1].vehicles = tmpveh;
+  tmpveh = grid[1].vehicles;
+  grid[1].vehicles = grid[my_MAPSIZE].vehicles;
+  grid[my_MAPSIZE].vehicles = tmpveh;
   break;
     
  case 3:
@@ -6234,11 +6283,23 @@ void map::rotate(int turns)
   grid[1].comp = grid[my_MAPSIZE + 1].comp;
   grid[my_MAPSIZE + 1].comp = grid[my_MAPSIZE].comp;
   grid[my_MAPSIZE].comp = tmpcomp;
+// ...and vehicles
+  tmpveh = grid[0].vehicles;
+  grid[0].vehicles = grid[1].vehicles;
+  grid[1].vehicles = grid[my_MAPSIZE + 1].vehicles;
+  grid[my_MAPSIZE + 1].vehicles = grid[my_MAPSIZE].vehicles;
+  grid[my_MAPSIZE].vehicles = tmpveh;
   break;
 
  default:
   return;
  }
+
+// change vehicles' directions
+ for (int i = 0; i < my_MAPSIZE * my_MAPSIZE; i++)
+     for (int v = 0; v < grid[i].vehicles.size(); v++)
+         if (turns >= 1 && turns <= 3)
+            grid[i].vehicles[v].turn (turns * 90);
 
 // Set the spawn points
  grid[0].spawns = sprot[0];
