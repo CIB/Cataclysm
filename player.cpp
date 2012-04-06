@@ -42,6 +42,7 @@ player::player()
  radiation = 0;
  cash = 0;
  recoil = 0;
+ driving_recoil = 0;
  scent = 500;
  name = "";
  male = true;
@@ -49,6 +50,7 @@ player::player()
  moves = 100;
  oxygen = 0;
  active_mission = -1;
+ in_vehicle = false;
  xp_pool = 0;
  for (int i = 0; i < num_skill_types; i++) {
   sklevel[i] = 0;
@@ -91,6 +93,8 @@ player& player::operator= (player rhs)
  radiation = rhs.radiation;
  cash = rhs.cash;
  recoil = rhs.recoil;
+ driving_recoil = rhs.driving_recoil;
+ in_vehicle = rhs.in_vehicle;
  scent = rhs.scent;
  name = rhs.name;
  male = rhs.male;
@@ -417,12 +421,14 @@ void player::load_info(game *g, std::string data)
 {
  std::stringstream dump;
  dump << data;
+ int inveh;
  dump >> posx >> posy >> str_cur >> str_max >> dex_cur >> dex_max >>
          int_cur >> int_max >> per_cur >> per_max >> power_level >>
          max_power_level >> hunger >> thirst >> fatigue >> stim >>
-         pain >> pkill >> radiation >> cash >> recoil >> scent >> moves >>
+         pain >> pkill >> radiation >> cash >> recoil >> driving_recoil >> inveh >> scent >> moves >>
          underwater >> can_dodge >> oxygen >> active_mission >> xp_pool >>
          male;
+ in_vehicle = inveh != 0;
 
  for (int i = 0; i < PF_MAX2; i++)
   dump >> my_traits[i];
@@ -490,7 +496,8 @@ std::string player::save_info()
          per_cur << " " << per_max << " " << power_level << " " <<
          max_power_level << " " << hunger << " " << thirst << " " << fatigue <<
          " " << stim << " " << pain << " " << pkill << " " << radiation <<
-         " " << cash << " " << recoil << " " << scent << " " << moves << " " <<
+         " " << cash << " " << recoil << " " << driving_recoil << " " << (in_vehicle? 1 : 0) <<
+         " " << scent << " " << moves << " " <<
          underwater << " " << can_dodge << " " << oxygen << " " <<
          active_mission << " " << xp_pool << " " << male << " ";
 
@@ -1343,13 +1350,14 @@ void player::disp_status(WINDOW *w, game *g)
 {
  mvwprintz(w, 1, 0, c_ltgray, "Weapon: %s", weapname().c_str());
  if (weapon.is_gun()) {
-       if (recoil >= 36)
+   int adj_recoil = recoil + driving_recoil;
+       if (adj_recoil >= 36)
    mvwprintz(w, 1, 30, c_red,    "Recoil");
-  else if (recoil >= 20)
+  else if (adj_recoil >= 20)
    mvwprintz(w, 1, 30, c_ltred,  "Recoil");
-  else if (recoil >= 4)
+  else if (adj_recoil >= 4)
    mvwprintz(w, 1, 30, c_yellow, "Recoil");
-  else if (recoil > 0)
+  else if (adj_recoil > 0)
    mvwprintz(w, 1, 30, c_ltgray, "Recoil");
  }
 
@@ -1405,36 +1413,83 @@ void player::disp_status(WINDOW *w, game *g)
  else if (pain - pkill >   0)
   mvwprintz(w, 3, 0, c_yellow, "Minor pain");
 
- nc_color col_str = c_white, col_dex = c_white, col_int = c_white,
-          col_per = c_white, col_spd = c_white;
- if (str_cur < str_max)
-  col_str = c_red;
- if (str_cur > str_max)
-  col_str = c_green;
- if (dex_cur < dex_max)
-  col_dex = c_red;
- if (dex_cur > dex_max)
-  col_dex = c_green;
- if (int_cur < int_max)
-  col_int = c_red;
- if (int_cur > int_max)
-  col_int = c_green;
- if (per_cur < per_max)
-  col_per = c_red;
- if (per_cur > per_max)
-  col_per = c_green;
- int spd_cur = current_speed(g);
- if (spd_cur < 100)
-  col_spd = c_red;
- if (spd_cur > 100)
-  col_spd = c_green;
+ int morale_cur = morale_level ();
+ nc_color col_morale = c_white;
+ if (morale_cur > 0)
+  col_morale = c_green;
+ else
+ if (morale_cur < 0)
+  col_morale = c_red;
+ if (morale_cur >= 1000)
+  mvwprintz(w, 3, 20, col_morale, "M  hi");
+ else if (morale_cur <= -100)
+  mvwprintz(w, 3, 20, col_morale, "M low");
+ else
+  mvwprintz(w, 3, 20, col_morale, "M %3d", morale_cur);
 
- mvwprintz(w, 3, 20, col_str, "Str %s%d", str_cur >= 10 ? "" : " ", str_cur);
- mvwprintz(w, 3, 27, col_dex, "Dex %s%d", dex_cur >= 10 ? "" : " ", dex_cur);
- mvwprintz(w, 3, 34, col_int, "Int %s%d", int_cur >= 10 ? "" : " ", int_cur);
- mvwprintz(w, 3, 41, col_per, "Per %s%d", per_cur >= 10 ? "" : " ", per_cur);
- mvwprintz(w, 3, 48, col_spd, "Spd %s%d", spd_cur >= 10 ? "" : " ", spd_cur);
+ vehicle &veh = g->m.veh_at (posx, posy);
+ if (in_vehicle && veh.type != veh_null)
+ {
+     veh.print_fuel_indicator (w, 3, 49);
+     nc_color col_indf1 = c_ltgray;
 
+     float strain = veh.strain();
+     nc_color col_vel = strain <= 0? c_ltblue :
+                        (strain <= 0.2? c_yellow :
+                        (strain <= 0.4? c_ltred : c_red));
+     if (veh.cruise_on)
+     {
+        mvwprintz(w, 3, 34, col_indf1, "{mph....>....}");
+        mvwprintz(w, 3, 38, col_vel, "%4d", veh.velocity / 100);
+        mvwprintz(w, 3, 43, c_ltgreen, "%4d", veh.cruise_velocity / 100);
+     }
+     else
+     {
+        mvwprintz(w, 3, 34, col_indf1, "  {mph....}  ");
+        mvwprintz(w, 3, 40, col_vel, "%4d", veh.velocity / 100);
+     }
+
+     if (veh.velocity != 0)
+     {
+        nc_color col_indc = veh.skidding? c_red : c_green;
+        int dfm = veh.face.dir() - veh.move.dir();
+        mvwprintz(w, 3, 30, col_indc, dfm < 0? "L" : ".");
+        mvwprintz(w, 3, 31, col_indc, dfm == 0? "0" : ".");
+        mvwprintz(w, 3, 32, col_indc, dfm > 0? "R" : ".");
+     }
+ }
+ else
+ {
+    nc_color col_str = c_white, col_dex = c_white, col_int = c_white,
+             col_per = c_white, col_spd = c_white;
+    if (str_cur < str_max)
+     col_str = c_red;
+    if (str_cur > str_max)
+     col_str = c_green;
+    if (dex_cur < dex_max)
+     col_dex = c_red;
+    if (dex_cur > dex_max)
+     col_dex = c_green;
+    if (int_cur < int_max)
+     col_int = c_red;
+    if (int_cur > int_max)
+     col_int = c_green;
+    if (per_cur < per_max)
+     col_per = c_red;
+    if (per_cur > per_max)
+     col_per = c_green;
+    int spd_cur = current_speed();
+    if (current_speed() < 100)
+     col_spd = c_red;
+    if (current_speed() > 100)
+     col_spd = c_green;
+
+    mvwprintz(w, 3, 26, col_str, "St %s%d", str_cur >= 10 ? "" : " ", str_cur);
+    mvwprintz(w, 3, 32, col_dex, "Dx %s%d", dex_cur >= 10 ? "" : " ", dex_cur);
+    mvwprintz(w, 3, 38, col_int, "In %s%d", int_cur >= 10 ? "" : " ", int_cur);
+    mvwprintz(w, 3, 44, col_per, "Pe %s%d", per_cur >= 10 ? "" : " ", per_cur);
+    mvwprintz(w, 3, 50, col_spd, "S %s%d", spd_cur >= 10 ? "" : " ", spd_cur);
+ }
 }
 
 bool player::has_trait(int flag)
@@ -2066,6 +2121,30 @@ void player::hurtall(int dam)
    painadd = dam / 3;
   else
    painadd = dam / 2;
+  pain += painadd;
+ }
+}
+
+void player::hitall(game *g, int dam, int vary)
+{
+ if (has_disease(DI_SLEEP)) {
+  g->add_msg("You wake up!");
+  rem_disease(DI_SLEEP);
+ } else if (has_disease(DI_LYING_DOWN))
+  rem_disease(DI_LYING_DOWN);
+
+ for (int i = 0; i < num_hp_parts; i++) {
+  int ddam = vary? dam * rng (100 - vary, 100) / 100 : dam;
+  int cut = 0;
+  absorb(g, (body_part) i, ddam, cut);
+  int painadd = 0;
+  hp_cur[i] -= ddam;
+   if (hp_cur[i] < 0)
+     hp_cur[i] = 0;
+  if (has_trait(PF_PAINRESIST))
+   painadd = dam / 3 / 4;
+  else
+   painadd = dam / 2 / 4;
   pain += painadd;
  }
 }
@@ -3845,6 +3924,11 @@ press 'U' while wielding the unloaded gun.", gun->tname(g).c_str());
 
 void player::read(game *g, char ch)
 {
+ vehicle &veh = g->m.veh_at (posx, posy);
+ if (veh.type != veh_null && veh.player_in_control (this)) {
+   g->add_msg("It's bad idea to read while driving.");
+   return;
+ }
  if (morale_level() < MIN_MORALE_READ) {	// See morale.h
   g->add_msg("What's the point of reading?  (Your morale is too low!)");
   return;

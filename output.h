@@ -87,6 +87,7 @@ nc_color invert_color(nc_color c);
 nc_color red_background(nc_color c);
 nc_color rand_color();
 char rand_char();
+long special_symbol (char sym);
 
 
 // Graphical tileset code

@@ -420,6 +420,9 @@ std::vector<point> game::target(int &x, int &y, int lowx, int lowy, int hix,
  WINDOW* w_target = newwin(13, 48, 12, SEEX * 2 + 8);
  wborder(w_target, LINE_XOXO, LINE_XOXO, LINE_OXOX, LINE_OXOX,
                  LINE_OXXO, LINE_OOXX, LINE_XXOO, LINE_XOOX );
+ if (!relevent) // currently targetting vehicle to refill with fuel
+  mvwprintz(w_target, 1, 1, c_red, "Select a vehicle");
+ else
  if (relevent == &u.weapon && relevent->is_gun())
   mvwprintz(w_target, 1, 1, c_red, "Firing %s - %s (%d)",
             u.weapon.tname().c_str(), u.weapon.curammo->name.c_str(),
@@ -428,6 +431,7 @@ std::vector<point> game::target(int &x, int &y, int lowx, int lowy, int hix,
   mvwprintz(w_target, 1, 1, c_red, "Throwing %s", relevent->tname().c_str());
  mvwprintz(w_target, 2, 1, c_white,
            "Move cursor to target with directional keys.");
+ if (relevent)
  mvwprintz(w_target, 3, 1, c_white,
            "'<' '>' Cycle targets; 'f' or '.' to fire.");
  wrefresh(w_target);
@@ -472,7 +476,14 @@ std::vector<point> game::target(int &x, int &y, int lowx, int lowy, int hix,
      }
     }
    }
-   mvwprintw(w_target, 5, 1, "Range: %d", rl_dist(u.posx, u.posy, x, y));
+   if (!relevent) // currently targetting vehicle to refill with fuel
+   {
+    vehicle &veh = m.veh_at (x, y);
+    if (veh.type != veh_null)
+        mvwprintw(w_target, 5, 1, "There is a %s", veh.name.c_str());
+   }
+   else
+    mvwprintw(w_target, 5, 1, "Range: %d", rl_dist(u.posx, u.posy, x, y));
    if (mon_at(x, y) == -1) {
     mvwputch(w_terrain, y + SEEY - u.posy, x + SEEX - u.posx, c_red, '*');
     mvwprintw(w_status, 0, 9, "                             ");
@@ -679,7 +690,8 @@ double calculate_missed_by(player &p, int trange)
 
   deviation += rng(0, p.weapon.curammo->accuracy);
   deviation += rng(0, p.weapon.accuracy());
-  deviation += rng(int(p.recoil / 4), p.recoil);
+  int adj_recoil = p.recoil + p.driving_recoil;
+  deviation += rng(int(adj_recoil / 4), adj_recoil);
 
 // .013 * trange is a computationally cheap version of finding the tangent.
 // (note that .00325 * 4 = .013; .00325 is used because deviation is a number

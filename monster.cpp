@@ -117,6 +117,11 @@ monster::~monster()
 
 std::string monster::name()
 {
+ if (!type)
+ {
+     debugmsg ("monster::name empty type!");
+     return std::string();
+ }
  if (unique_name != "")
   return type->name + ": " + unique_name;
  return type->name;
