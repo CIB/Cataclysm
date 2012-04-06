@@ -297,6 +297,7 @@ class game
   void disp_kills();       // Display the player's kill counts
   void disp_NPCs();        // Currently UNUSED.  Lists global NPCs.
   void list_missions();    // Listed current, completed and failed missions.
+  void display_scent_mutation(); // Like the display_scent() debug function, but for the use of mutations!
 
 // If x & y are OOB, creates a new overmap and returns the proper terrain; also,
 // may mark the square as seen by the player

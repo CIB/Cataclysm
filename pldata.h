@@ -96,7 +96,7 @@ struct player_activity
   placement = point(-1, -1);
  }
 };
- 
+
 enum pl_flag {
  PF_NULL = 0,
  PF_FLEET,	// -15% terrain movement cost
@@ -141,6 +141,7 @@ enum pl_flag {
  PF_FORGETFUL,	// Skills decrement faster
  PF_LIGHTWEIGHT,// Longer DI_DRUNK and DI_HIGH
  PF_ADDICTIVE,	// Better chance of addiction / longer addictive effects
+ PF_PESSIMISTIC,// Like optimistic, but opposite and less effect from negative moods
  PF_TRIGGERHAPPY,// Possible chance of unintentional burst fire
  PF_SMELLY,	// Default scent is higher
  PF_CHEMIMBALANCE,// Random tweaks to some values
@@ -153,24 +154,30 @@ enum pl_flag {
  PF_WOOLALLERGY,// Can't wear wool
  PF_HPIGNORANT,	// Don't get to see exact HP numbers, just colors & symbols
  PF_TRUTHTELLER, // Worse at telling lies
+ PF_SKIN_SOFT,//
  PF_UGLY, // +1 grotesqueness
+ PF_OVERWEIGHT, // +1 torso encumbrance, 5% slower and slighly ugly, not as much as ugly
 
  PF_MAX,
 // Below this point is mutations and other mid-game perks.
 // They are NOT available during character creation.
  PF_SKIN_ROUGH,//
+ PF_SKIN_LEATHER,//
  PF_NIGHTVISION2,//
  PF_NIGHTVISION3,//
  PF_INFRARED,//
  PF_FASTHEALER2,//
  PF_REGEN,//
  PF_FANGS,//
+ PF_TUSKS,//
  PF_MEMBRANE,//
  PF_GILLS,//
  PF_SCALES,//
  PF_THICK_SCALES,//
  PF_SLEEK_SCALES,//
+ PF_CHAMELEON_SCALES,// TODO: balance effects...
  PF_LIGHT_BONES,//
+ PF_SKIN_BRISTLE,// Feathers needed a prereq
  PF_FEATHERS,//
  PF_LIGHTFUR,// TODO: Warmth effects
  PF_FUR,// TODO: Warmth effects
@@ -194,6 +201,10 @@ enum pl_flag {
  PF_POISONOUS,//
  PF_SLIME_HANDS,
  PF_COMPOUND_EYES,//
+ PF_EYE_STALKS,// TODO: Allow seeing through nearby trees (stalks moving around them), or tweak fov?
+ PF_EYES_4,//
+ PF_EYES_6,//
+ PF_EYES_8,//
  PF_PADDED_FEET,//
  PF_HOOVES,//
  PF_SAPROVORE,//
@@ -205,6 +216,7 @@ enum pl_flag {
  PF_FLEET2,//
  PF_TAIL_STUB,//
  PF_TAIL_FIN,//
+ PF_FIN_DORSAL,//
  PF_TAIL_LONG,//
  PF_TAIL_FLUFFY,//
  PF_TAIL_STING,//
@@ -217,14 +229,19 @@ enum pl_flag {
  PF_MOUTH_TENTACLES,//
  PF_MANDIBLES,//
  PF_CANINE_EARS,
+ PF_CANINE_NOSE,// TODO: Add moderately powered with decent range scent vision, current version is just - debug style scent vision, probably should use bionic ver...
+ PF_FORKED_TONGUE,// TODO: In future add powerful, but low range scent vision as activatable, current version is just - debug style scent vision, probably should use bionic ver...
  PF_WEB_WALKER,
  PF_WEB_WEAVER,
+ PF_ACID_RESIST,// TODO: Make acid effect clothing but not damage the player
+ PF_ACID_IMMUNE,
+ PF_ACID_TRAIL,// TODO: Make a bit more powerful
  PF_WHISKERS,
 
  PF_HEADBUMPS,//
  PF_ANTLERS,//
  PF_SLIT_NOSTRILS,//
- PF_FORKED_TONGUE,//
+ PF_EAR_HOLES,// Reduces hearing ability, not as much as poor hearing.
  PF_EYEBULGE,//
  PF_MOUTH_FLAPS,//
  PF_WINGS_STUB,//
@@ -251,29 +268,32 @@ enum pl_flag {
  PF_WEBBED,//
  PF_BEAK,//
  PF_UNSTABLE,//
- PF_RADIOACTIVE1,//
- PF_RADIOACTIVE2,//
- PF_RADIOACTIVE3,//
- PF_SLIMY,//
+ PF_RADIOACTIVE1,// TODO: Put a cap on radiation per tile caused by this.
+ PF_RADIOACTIVE2,// TODO: Put a cap on radiation per tile caused by this.
+ PF_RADIOACTIVE3,// TODO: Put a cap on radiation per tile caused by this.
+ PF_SLIMY,// Acid slime trail?
  PF_HERBIVORE,//
  PF_CARNIVORE,//
  PF_PONDEROUS1,	// 10% movement penalty
  PF_PONDEROUS2, // 20%
  PF_PONDEROUS3, // 30%
- PF_SUNLIGHT_DEPENDANT,//
- PF_COLDBLOOD,//
- PF_COLDBLOOD2,//
- PF_COLDBLOOD3,//
+ PF_SUNLIGHT_DEPENDANT,// Increase in speed in sunlight?
+ PF_COLDBLOOD,// Increase in speed at high tempuratures?
+ PF_COLDBLOOD2,// Increase in speed at high tempuratures?
+ PF_COLDBLOOD3,// Increase in speed at high tempuratures? Also, disable detection from heat detecting monsters and NPCs.
  PF_GROWL,//
  PF_SNARL,//
- PF_SHOUT1,//
- PF_SHOUT2,//
- PF_SHOUT3,//
+ PF_SHOUT1,// Can scare animals away?
+ PF_SHOUT2,// Can scare animals away?
+ PF_SHOUT3,// Can scare animals away and possibly call in nearby wolves to aid or kill player, depending wether player has mammal pheromones.
  PF_ARM_TENTACLES,
  PF_ARM_TENTACLES_4,
  PF_ARM_TENTACLES_8,
+ PF_PINCERS,
  PF_SHELL,
  PF_LEG_TENTACLES,
+ PF_CROSSEYED,//
+ PF_BIO_LUM,// Like a flashlight, only natural! And... less light...
 
  PF_MAX2
 };
@@ -399,6 +419,10 @@ of these for longer."},
 {"Addictive Personality", -3, 0, 0, "\
 It's easier for you to become addicted to substances, and harder to rid\n\
 yourself of these addictions."},
+{"Pessimist", -1, 0, 0, "\
+You generally only see the possibility of life getting worse, your\n\
+morale is generally low, however as a Pessimist you are either right\n\
+or pleasantly surprised and lose less morale from bad things."},
 {"Trigger Happy", -2, 0, 0, "\
 On rare occasion, you will go full-auto when you intended to fire a single\n\
 shot.  This has no effect when firing handguns or other semi-automatic\n\
@@ -438,9 +462,15 @@ idea of whether you're in good condition or not."},
 {"Truth Teller", -2, 0, 0, "\
 When you try to tell a lie, you blush, stammer, and get all shifty-eyed.\n\
 Telling lies and otherwise bluffing will be much more difficult for you."},
+{"Soft Skin", -2, 0, -2, "\
+Your skin is smooth and pleasing to the eye,\n\
+but cutting weapons can more easily penetrate it."},
 {"Ugly", -1, 0, 2, "\
 You're not much to look at.  NPCs who care about such things will react\n\
 poorly to you."},
+{"Overweight", -3, 0, 1, "\
+You're overweight, this gives you a permanent torso encumberance of 1,\n\
+lowers your speed by 5 percent and doesn't look too nice either."},
 
 {"Bug - PF_MAX", 0, 0, 0, "\
 This shouldn't be here!  You have the trait PF_MAX toggled.  Weird."},
@@ -458,6 +488,8 @@ This shouldn't be here!  You have the trait PF_MAX toggled.  Weird."},
 
 {"Rough Skin", 0, 2, 1, "\
 Your skin is slightly rough.  This has no gameplay effect."},
+{"Leathery Skin", 0, 3, 2, "\
+Your skin is thick and leathery, providing you with decent cut protection."},
 {"High Night Vision", 3, 0, 0, "\
 You can see incredibly well in the dark!"},
 {"Full Night Vision", 5, 0, 0, "\
@@ -471,7 +503,11 @@ Your flesh regenerates from wounds incredibly quickly."},
 {"Fangs", 2, 2, 2, "\
 Your teeth have grown into two-inch-long fangs, allowing you to make an extra\n\
 attack when conditions favor it."},
-{"Nictitating Membrane", 1, 1, 2, "\
+{"Tusks", 3, 4, 4, "\
+Your fangs have become two five-inch-long tusks protruding from your mouth,\n\
+allowing you to make a powerful attack when conditions favor it. They also\n\
+prevent you from wearing mouthgear."},
+{"Nictating Membrane", 1, 1, 2, "\
 You have a second set of clear eyelids which lower while underwater, allowing\n\
 you to see as though you were wearing goggles."},
 {"Gills", 3, 5, 3, "\
@@ -484,19 +520,25 @@ A set of heavy green scales have grown to cover your body, acting as a\n\
 natural armor.  It is very difficult to penetrate, but also limits your\n\
 flexibility, resulting in a -2 penalty to Dexterity."},
 {"Sleek Scales", 6, 10, 4, "\
-A set of very flexible and slick scales have grown to cover your body.  These\n\
+A set of very flexible and slick scales have grown to cover your body. These\n\
 act as a weak set of armor, improve your ability to swim, and make you\n\
 difficult to grab."},
+{"Chameleon Scales", 12, 12, 3, "\
+A set of flexible scales have grown to cover your body, acting as a\n\
+natural armor, they change colour according to your environment,\n\
+making you much harder to see."}, // not as ugly, pretty colours =), more noticable though.
 {"Light Bones", 2, 0, 0, "\
 Your bones are very light.  This enables you to run and attack 10%% faster,\n\
-but also reduces your carrying weight by 20%% and makes bashing attacks hurt\n\
+but also reduces your carrying weight by 15%% and makes bashing attacks hurt\n\
 a little more."},
+{"Bristly Skin", 0, 2, 2, "\
+Your skin is covered by small, rough projections, this has no effect."},
 {"Feathers", 2, 10, 3, "\
 Iridescent feathers have grown to cover your entire body, providing a\n\
 marginal protection against attacks and minor protection from cold. They\n\
 also provide a natural waterproofing."},
 {"Lightly Furred", 1, 6, 2, "\
-Light fur has grown to coveryour entire body, providing slight protection\n\
+Light black fur has grown to cover your entire body, providing slight protection\n\
 from cold."},
 {"Furry", 2, 10, 3, "\
 Thick black fur has grown to cover your entire body, providing a marginal\n\
@@ -511,11 +553,11 @@ considerable physical protection, but reduces your dexterity by 1."},
 You've grown a chitin exoskeleton made of thick, stiff plates, like that of\n\
 a beetle.  It provides excellent physical protection, but reduces your\n\
 dexterity by 1 and encumbers all body parts but your eyes and mouth."},
-{"Spines", 1, 0, 0, "\
+{"Spines", 1, 1, 1, "\
 Your skin is covered with fine spines.  Whenever an unarmed opponent strikes\n\
 a part of your body that is not covered by clothing, they will receive\n\
 moderate damage."},
-{"Quills", 3, 0, 0, "\
+{"Quills", 3, 2, 2, "\
 Your body is covered with large quills.  Whenever an unarmed opponent strikes\n\
 a part of your body that is not covered by clothing, they will receive\n\
 significant damage."},
@@ -568,6 +610,19 @@ slime.  Attacks using your hand will cause minor acid damage."},
 {"Compound Eyes", 2, 9, 5, "\
 Your eyes are compound, like those of an insect.  This increases your\n\
 perception by 2 so long as you aren't wearing eyewear."},
+{"Eye Stalks", 2, 12, 7, "\
+Long stalks have grown underneath your eye sockets allowing you to see at greater\n\
+distance, however you cannot put on any eyewear."},
+{"Four Eyes", 2, 8, 3, "\
+Your eyes have both split into two, this allows you to wear more on them\n\
+by giving them -1 encumberance as well as increasing yor perception by 1."},
+{"Six Eyes", 2, 10, 4, "\
+Your four eyes have become six, this allows you to wear more on them\n\
+by giving them -2 encumberance as well as increasing yor perception by 2."},
+{"Eight Eyes", 2, 12, 5, "\
+The number of eyes you possess has increased to eight!\n\
+this allows you to wear more on your eyes by giving them -3 encumberance\n\
+as well as increasing yor perception by 3."},
 {"Padded Feet", 1, 1, 0, "\
 The bottoms of your feet are strongly padded.  You receive no movement\n\
 penalty for not wearing shoes, and even receive a 10%% bonus when running\n\
@@ -606,6 +661,9 @@ flat surfaces."},
 You have a short, stubby tail, like a rabbit's.  It serves no purpose."},
 {"Tail Fin", 1, 4, 2, "\
 You have a fin-like tail.  It allows you to swim more quickly."},
+{"Dorsal Fin", 1, 2, 2, "\
+You have a dorsal fin running down from the base of your skull to the\n\
+end of your tail. This allows you to swim slightly faster."},
 {"Long Tail", 2, 6, 2, "\
 You have a long, graceful tail.  It improves your balance, making your\n\
 ability to dodge higher."},
@@ -642,12 +700,28 @@ wearing mouthwear."},
 {"Canine Ears", 2, 4, 1, "\
 Your ears have extended into long, pointed ones, like those of a canine.\n\
 They enhance your hearing, allowing you to hear at greater distances."},
+{"Canine Nose", 4, 3, 4, "\
+Your nose has become like that of a canine, you can press v to\n\
+view surrounding scents."},
+{"Forked Tongue", 2, 1, 3, "\
+Your tongue is forked, like that of a reptile, this allows you\n\
+to detect nearby scents by pressing v, it also makes it slightly easier to\n\
+persuade and intimidate people.."},
 {"Web Walker", 3, 0, 0, "\
 Your body excretes very fine amounts of a chemcial which prevents you from\n\
 sticking to webs.  Walking through webs does not affect you at all."},
 {"Web Weaver", 3, 0, 0, "\
 Your body produces webs.  As you move, there is a chance that you will\n\
 leave webs in your wake."},
+{"Acid Resistant", 2, 0, 0, "\
+Your are naturally resistant to acid, however you should keep in mind\n\
+that clothing isn't."},
+{"Acid Immune", 5, 0, 0, "\
+Your are immune resistant to acid, however you should keep in mind\n\
+that clothing isn't."},
+{"Acid Trail", 4, 8, 7, "\
+A corrosive slime oozes from your skin and leaves a trail behind you.\n\
+There is a chance for this trail to have acid instead of slime."},
 {"Whiskers", 1, 3, 1, "\
 You have a set of prominent rodent-like whiskers around your mouth.  These\n\
 make you more aware of vibrations in the air, and improve your ability to\n\
@@ -663,8 +737,10 @@ headbutt attack."},
 You have a flattened nose and thin slits for nostrils, giving you a lizard-\n\
 like appearance.  This makes breathing slightly difficult and increases\n\
 mouth encumbrance by 1."},
-{"Forked Tongue", 0, 1, 3, "\
-Your tongue is forked, like that of a reptile.  This has no effect."},
+{"Ear Holes", -2, 3, 1, "\
+Your ears are holes on the side of your head, like those of a fish, bird\n\
+or insect this makes it harder to hear far-off noises and lowers\n\
+the accuracy at which you can hear them."},
 {"Bulging Eyes", 0, 8, 4, "\
 Your eyes bulge out several inches from your skull.  This does not affect\n\
 your vision in any way."},
@@ -696,7 +772,7 @@ want to interact with you unless they have a very good reason to."},
 {"Hollow Bones", -6, 0, 0, "\
 You have Avian Bone Syndrome--your bones are nearly hollow.  Your body is\n\
 very light as a result, enabling you to run and attack 20%% faster, but\n\
-also frail; you can carry 40%% less, and bashing attacks injure you more."},
+also frail; you can carry 30%% less, and bashing attacks injure you more."},
 {"Nausea", -3, 0, 0, "\
 You feel nauseous almost constantly, and are more liable to throw up from\n\
 food poisoning, alcohol, etc."},
@@ -801,6 +877,10 @@ gloves.  You can make up to 3 extra attacks with them."},
 Your arms have transformed into eight tentacles, resulting in a bonus of 1 to\n\
 dexterity, permanent hand encumbrance of 3, and preventing you from wearing\n\
 gloves.  You can make up to 7 extra attacks with them."},
+{"Pincers", -4, 8, 3, "\
+Your hands have become pincers. They provide protection and give you powerful\n\
+melee attacks. The lack of fingers results in a permanent hand encumbrance of\n\
+4 and a dexterity loss of 2, also preventing you from wearing gloves."},
 {"Shell", -6, 8, 3, "\
 You have grown a thick shell over your torso, providing excellent armor.  You\n\
 find you can use the empty space as 16 storage space, but cannot wear\n\
@@ -808,7 +888,13 @@ anything on your torso."},
 {"Leg Tentacles", -3, 8, 4, "\
 Your legs have transformed into six tentacles.  This decreases your speed on\n\
 land by 20%, but makes your movement silent.  However, they also increase\n\
-your swimming speed."}
+your swimming speed."},
+{"Crosseyed", -7, 1, 2, "\
+Your eyes have become permanently crossed, you find it very hard to focus\n\
+and lose 4 perception, you also cannot successfully read as a result."},
+{"Bio-Luminescent", 0, 3, 1, "\
+Your body naturally glows in the dark, this allows you to see as if you\n\
+were using a flashlight, but allows others to see you more easily."}
 };
 
 enum hp_part {

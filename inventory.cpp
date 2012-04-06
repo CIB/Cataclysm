@@ -219,6 +219,36 @@ void inventory::form_from_map(game *g, point origin, int range)
     fire.charges = 1;
     add_item(fire);
    }
+   if (g->m.ter(x, y) == t_forge) {
+    item forge(g->itypes[itm_forge], 0);
+    forge.charges = 1;
+    add_item(forge);
+   }
+   if (g->m.ter(x, y) == t_grindstone) {
+    item grind(g->itypes[itm_grindstone], 0);
+    grind.charges = 1;
+    add_item(grind);
+   }
+   if (g->m.ter(x, y) == t_watertub) {
+    item water(g->itypes[itm_forgewater], 0);
+    water.charges = 1;
+    add_item(water);
+   }
+   if (g->m.ter(x, y) == t_crucible) {
+    item crucible(g->itypes[itm_hot_crucible], 0);
+    crucible.charges = 1;
+    add_item(crucible);
+   }
+   if (g->m.ter(x, y) == t_anvil) {
+    item anvil(g->itypes[itm_anvil], 0);
+    anvil.charges = 1;
+    add_item(anvil);
+   }
+   if (g->m.ter(x, y) == t_mold) {
+    item mold(g->itypes[itm_ingotmold], 0);
+    mold.charges = 1;
+    add_item(mold);
+   }
   }
  }
 }

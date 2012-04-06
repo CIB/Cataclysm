@@ -177,6 +177,14 @@ int player::hit_mon(game *g, monster *z)
    if (one_in(2))
     can_poison = true;
   }
+  if (has_trait(PF_PINCERS) && z->armor_bash() - sklevel[sk_unarmed] < 10) {
+   int z_armor = (z->armor_bash() - sklevel[sk_unarmed]);
+   if (z_armor < 0)
+    z_armor = 0;
+   dam += 15 - z_armor;
+   if (one_in(4))
+    can_poison = true;
+  }
   if (has_trait(PF_THORNS) && z->armor_cut() < 4 &&
       !wearing_something_on(bp_hands)) {
    dam += 4 - z->armor_cut();
@@ -321,10 +329,29 @@ int player::hit_mon(game *g, monster *z)
     else if (can_see)
      g->add_msg("%s bur%s %s talons into the %s!", You.c_str(),(is_u?"y":"ies"),
                 your.c_str(), z->name().c_str());
+   }
+     else if (has_trait(PF_PINCERS)) {
+    headshot &= z->hp < dam;
+    if (headshot && can_see)
+     g->add_msg("%s pincers shatter%s the %s's skull!", You.c_str(), (is_u ? "" : "s"),
+                z->name().c_str());
+    else if (can_see)
+     g->add_msg("%s pincers tear the %s's body open!", You.c_str(),
+                z->name().c_str());
+   }
+     else if (has_trait(PF_CLAWS)) {
+    dam += 1;
+    headshot &= z->hp < dam && one_in(3);
+    if (headshot && can_see)
+     g->add_msg("%s claws tear at the %s's throat!", Your.c_str(),
+                z->name().c_str());
+    else if (can_see)
+     g->add_msg("%s bur%s %s claws into the %s!", You.c_str(),(is_u?"y":"ies"),
+                your.c_str(), z->name().c_str());
    } else {
     headshot &= z->hp < dam && one_in(2);
     if (headshot && can_see)
-     g->add_msg("%s crush%s the %s's skull in a single blow!", 
+     g->add_msg("%s crush%s the %s's skull in a single blow!",
                 You.c_str(), (is_u ? "" : "es"), z->name().c_str());
     else if (can_see)
      g->add_msg("%s deliver%s a crushing punch!",You.c_str(),(is_u ? "" : "s"));
@@ -577,7 +604,7 @@ bool player::hit_player(game *g, player &p, body_part &bp,
   bp = bp_arms;
  else
   bp = bp_legs;
- 
+
  hitdam = base_damage();
 
  if (unarmed) {// Unarmed bonuses
@@ -758,6 +785,17 @@ std::vector<special_attack> player::mutation_attacks(monster *z)
   ret.push_back(tmp);
  }
 
+  if (has_trait(PF_TUSKS) &&
+     one_in(15 - dex_cur - sklevel[sk_unarmed])) {
+  special_attack tmp;
+  text << You << " gore" << (is_u ? " " : "s ") << "the " << z->name() <<
+          " with " << your << " tusks!";
+  tmp.text = text.str();
+  tmp.stab = 17;
+  tmp.bash = 10;
+  ret.push_back(tmp);
+ }
+
  if (has_trait(PF_MANDIBLES) && one_in(22 - dex_cur - sklevel[sk_unarmed])) {
   special_attack tmp;
   text << You << " slice" << (is_u ? " " : "s ") << "the " << z->name() <<
@@ -774,7 +812,7 @@ std::vector<special_attack> player::mutation_attacks(monster *z)
   tmp.stab = 15;
   ret.push_back(tmp);
  }
-  
+
  if (has_trait(PF_HOOVES) && one_in(25 - dex_cur - 2 * sklevel[sk_unarmed])) {
   special_attack tmp;
   text << You << " kick" << (is_u ? " " : "s ") << "the " << z->name() <<

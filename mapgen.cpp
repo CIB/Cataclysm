@@ -14,9 +14,8 @@ ter_id grass_or_dirt()
 {
  if (one_in(4))
   return t_grass;
- return t_dirt;
+ return t_claydirt;
 }
-
 enum room_type {
  room_null,
  room_closet,
@@ -326,7 +325,7 @@ void map::draw_map(oter_id terrain_type, oter_id t_north, oter_id t_east,
      if (ter(x, y) == t_water_sh)
       ter(x, y) = t_water_dp;
      else if (ter(x, y) == t_dirt || ter(x, y) == t_underbrush)
-      ter(x, y) = t_water_sh;
+      ter(x, y) = t_bog;
     } else
      i = 20;
     x += rng(-2, 2);
@@ -1652,6 +1651,77 @@ void map::draw_map(oter_id terrain_type, oter_id t_north, oter_id t_east,
    rotate(3);
   break;
 
+
+ case ot_workshop_north:
+ case ot_workshop_east:
+ case ot_workshop_south:
+ case ot_workshop_west:
+     /*
+     -------""---"""------
+     |{{{{{           #   |
+     |{               #   |
+     |{               #   |
+     |{               ### |
+     |{                   |
+     |{     {{            "
+     |{     {{            "
+     |{                   "
+     |{                   |
+     |{                   |
+     |{  {{     {{        "
+     |{  {{     {{        "
+     |{                   "
+     |{                   |
+     |#     {      {     #|
+     |#     {      {     #|
+     |#     {      {     #|
+     |#     {      {     #|
+     |####################|
+     ----------------------
+
+     */
+
+  square(this, grass_or_dirt(), 0, 0, SEEX * 2, SEEY * 2);
+  square(this, t_floor, 4, 4, SEEX * 2 - 4, SEEY * 2 - 4);
+  line(this, t_wall_v, 3, 4, 3, SEEY * 2 - 4);
+  line(this, t_wall_v, SEEX * 2 - 3, 4, SEEX * 2 - 3, SEEY * 2 - 4);
+  line(this, t_wall_h, 3, 3, SEEX * 2 - 3, 3);
+  line(this, t_wall_h, 3, SEEY * 2 - 3, SEEX * 2 - 3, SEEY * 2 - 3);
+  ter(13, 3) = t_door_c;
+  line(this, t_window, 10, 3, 11, 3);
+  line(this, t_window, 16, 3, 18, 3);
+  line(this, t_window, SEEX * 2 - 3, 9,  SEEX * 2 - 3, 11);
+  line(this, t_window, SEEX * 2 - 3, 14,  SEEX * 2 - 3, 16);
+  line(this, t_counter, 4, SEEY * 2 - 4, SEEX * 2 - 4, SEEY * 2 - 4);
+  line(this, t_counter, 4, SEEY * 2 - 5, 4, SEEY * 2 - 9);
+  line(this, t_counter, SEEX * 2 - 4, SEEY * 2 - 5, SEEX * 2 - 4, SEEY * 2 - 9);
+  line(this, t_counter, SEEX * 2 - 7, 4, SEEX * 2 - 7, 6);
+  line(this, t_counter, SEEX * 2 - 7, 7, SEEX * 2 - 5, 7);
+  line(this, t_rack, 9, SEEY * 2 - 5, 9, SEEY * 2 - 9);
+  line(this, t_rack, SEEX * 2 - 9, SEEY * 2 - 5, SEEX * 2 - 9, SEEY * 2 - 9);
+  line(this, t_rack, 4, 4, 4, SEEY * 2 - 10);
+  line(this, t_rack, 5, 4, 8, 4);
+  place_items(mi_wood_working_tools, 25, 4, SEEY * 2 - 4, SEEX * 2 - 4,
+              SEEY * 2 - 4, false, turn - 50);
+  place_items(mi_wood_working_tools, 90, 4, SEEY * 2 - 5, 4, SEEY * 2 - 9,
+              false, turn - 50);
+  place_items(mi_wood_working_tools, 60, SEEX * 2 - 4, SEEY * 2 - 5,
+              SEEX * 2 - 4, SEEY * 2 - 9, false, turn - 50);
+  place_items(mi_wood_working_tools, 70, 9, SEEY * 2 - 5, 9, SEEY * 2 - 9,
+              false, turn - 50);
+  place_items(mi_wood_working_tools, 70, SEEX * 2 - 9, SEEY * 2 - 5,
+              SEEX * 2 - 9, SEEY * 2 - 9, false, turn - 50);
+  place_items(mi_wood_working_tools, 85, 4, 4, 4, SEEY * 2 - 10, false,
+              turn - 50);
+  place_items(mi_wood_working_tools, 85, 5, 4, 8, 4, false, turn - 50);
+  if (terrain_type == ot_workshop_east)
+   rotate(1);
+  if (terrain_type == ot_workshop_south)
+   rotate(2);
+  if (terrain_type == ot_workshop_west)
+   rotate(3);
+  break;
+ 
  case ot_s_sports_north:
  case ot_s_sports_east:
  case ot_s_sports_south:
@@ -4163,12 +4233,14 @@ void map::draw_map(oter_id terrain_type, oter_id t_north, oter_id t_east,
   ter(17, 17) = t_door_locked;
 
   // Item placement
-  place_items(mi_snacks, 30, 19, 3, 19, 10, false, 0);
-  place_items(mi_snacks, 50, 18, 18, 21, 18, false, 0);
+  place_items(mi_bar, 30, 19, 3, 19, 10, false, 0);
+  place_items(mi_bar, 50, 18, 18, 21, 18, false, 0);
   place_items(mi_fridgesnacks, 60, 21, 4, 21, 4, false, 0);
   place_items(mi_fridgesnacks, 60, 21, 17, 21, 17, false, 0);
-  place_items(mi_alcohol, 50, 21, 5, 21, 8, false, 0);
+  place_items(mi_bar, 50, 21, 5, 21, 8, false, 0);
   place_items(mi_trash, 15, 2, 17, 16, 19, true, 0);
+ if (one_in(3))
+  place_items(mi_alcohol, 50, 21, 5, 21, 8, false, 0);
 
   if (terrain_type == ot_bar_east)
    rotate(1);

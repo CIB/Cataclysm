@@ -36,6 +36,7 @@ struct construct // Construction functions.
  bool able_always(game *, point) { return true;  }
  bool able_never (game *, point) { return false; }
  bool able_empty (game *, point); // Able if tile is empty
+ bool able_indoors(game *, point); //Able on floor tiles.
  bool able_window(game *, point); // Any window tile
  bool able_window_pane(game *, point); // Only intact windows
  bool able_broken_window(game *, point); // Able if tile is broken window
@@ -43,7 +44,7 @@ struct construct // Construction functions.
  bool able_door_broken(game *, point); // Broken door
  bool able_wall  (game *, point); // Able if tile is wall
  bool able_wall_wood(game *g, point); // Only player-built walls
- bool able_between_walls(game *, point); // Flood-fill contained by walls
+ bool able_cieling(game *, point);
  bool able_dig(game *, point); // Able if diggable terrain
  bool able_pit(game *, point); // Able only on pits
 
@@ -53,5 +54,5 @@ struct construct // Construction functions.
  void done_trap_pit(game *, point);
  void done_fill_pit(game *, point);
  void done_window_pane(game *, point);
-
+ void done_campfire(game *, point);
 };

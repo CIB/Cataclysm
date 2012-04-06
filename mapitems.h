@@ -13,7 +13,7 @@ enum items_location {
  mi_hardware, mi_tools, mi_bigtools, mi_mischw,
  mi_consumer_electronics,
  mi_sports, mi_camping, mi_allsporting,
- mi_alcohol,
+ mi_alcohol, mi_bar,
  mi_trash,
  mi_ammo, mi_pistols, mi_shotguns, mi_rifles, mi_smg, mi_assault, mi_allguns,
   mi_gunxtras,
@@ -38,6 +38,7 @@ enum items_location {
  mi_cavern,
  mi_spider,
  mi_ant_food, mi_ant_egg,
+ mi_wood_working_tools,
 // Monster drops
  mi_biollante, mi_bugs, mi_bees, mi_wasps, mi_robots,
 // Map Extras
