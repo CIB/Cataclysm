@@ -87,11 +87,15 @@ void dis_msg(game *g, dis_type type)
  case DI_AMIGARA:
   g->add_msg("You can't look away from the fautline...");
   break;
+ case DI_MUTATE:
+  g->add_msg("You feel strange.");
+  break;
+  break;
  default:
   break;
  }
 }
-  
+
 void dis_effect(game *g, player &p, disease &dis)
 {
  int bonus;
@@ -137,7 +141,7 @@ void dis_effect(game *g, player &p, disease &dis)
    p.add_disease(DI_HEATSTROKE, 2, g);
   p.int_cur -= 1;
   break;
-   
+
  case DI_HEATSTROKE:
   p.str_cur -=  2;
   p.per_cur -=  1;
@@ -437,7 +441,7 @@ void dis_effect(game *g, player &p, disease &dis)
   p.str_cur -= int(dis.duration / 1500);
   if (dis.duration <= 600)
    p.str_cur += 1;
-  if (dis.duration > 2000 + 100 * dice(2, 100) && 
+  if (dis.duration > 2000 + 100 * dice(2, 100) &&
       (p.has_trait(PF_WEAKSTOMACH) || p.has_trait(PF_NAUSEA) || one_in(20)))
    p.vomit(g);
   if (!p.has_disease(DI_SLEEP) && dis.duration >= 4500 &&
@@ -509,7 +513,7 @@ void dis_effect(game *g, player &p, disease &dis)
   }
   if ((p.has_trait(PF_WEAKSTOMACH) && one_in(350 + bonus)) ||
       (p.has_trait(PF_NAUSEA) && one_in(50 + bonus)) ||
-      one_in(900 + bonus)) 
+      one_in(900 + bonus))
    p.vomit(g);
   p.str_cur -= 3;
   p.dex_cur--;
@@ -688,6 +692,40 @@ void dis_effect(game *g, player &p, disease &dis)
    p.int_cur -= 1;
   }
   break;
+
+ case DI_MUTATE:
+  if (one_in(3300)) {	// Average once per about 3 hours.
+      if (p.has_disease(DI_SLEEP)) {
+   p.rem_disease(DI_SLEEP);
+      }
+  if (one_in(4)) {
+  g->add_msg("You feel sick.");
+ p.vomit(g);
+  }
+  if (one_in(12)) {
+  g->add_msg("You suddenly collapse onto the ground and spasm uncontrollably!");
+ p.moves -= 800;
+ if (one_in(3)) {
+    g->add_msg("You hurt yourself during the convlusions!");
+    g->u.hit(g, bp_legs, 1, 0, rng(0,  5));
+     g->u.hit(g, bp_arms, 1, 0, rng(0,  5));
+      g->u.hit(g, bp_torso, 1, 0, rng(0,  3));
+       g->u.hit(g, bp_head, 1, 0, rng(0,  5));
+  }
+  }
+  g->add_msg("You feel your body changing.");
+ p.mutate(g);
+ p.moves -= 100;
+  }
+  if (one_in(300)) {
+  p.hunger++;
+  p.thirst++;
+  }
+  if (one_in(8000) && p.has_trait(PF_DISIMMUNE)) { //immune response!
+  g->add_msg("You feel normal again.");
+              p.rem_disease(DI_MUTATE);
+ }
+ break;
 
  case DI_TELEGLOW:
 // Default we get around 300 duration points per teleport (possibly more
@@ -910,6 +948,12 @@ std::string dis_name(disease dis)
 
  case DI_IN_PIT:	return "Stuck in Pit";
  default:		return "";
+ case DI_MUTATE:
+  if (dis.duration > 11050) return "Feeling Extremely Strange";
+  if (dis.duration > 6700) return "Feeling Very Strange";
+  if (dis.duration > 3400)  return "Feeling Quite Strange";
+                           return "Feeling Strange";
+
  }
 }
 
@@ -962,7 +1006,7 @@ std::string dis_description(disease dis)
   stream << "Your feet are cold.";
   if (dis.duration >= 100)
    stream << "  They may become frostbitten.";
-  stream << "\n";
+ stream << "\n";
   if (dis.duration >= 4)
    stream << "Speed -" << (dis.duration > 60 ? 15 : int(dis.duration / 4)) <<
              "%";
@@ -1081,7 +1125,7 @@ Strength - 1;     Dexterity - 4;    Speed - 25";
    stream << "Intelligence - " << intpen << ";    ";
   if (perpen > 0)
    stream << "Perception - " << perpen;
-  
+
   return stream.str();
 
  case DI_CIG:
@@ -1122,6 +1166,18 @@ Speed -40;   Strength - 3;   Dexterity - 2;   Intelligence - 2";
  case DI_IN_PIT:
   return "\
 You're stuck in a pit.  Sight distance is limited and you have to climb out.";
+
+ case DI_MUTATE:
+  stream  << "You feel ";
+  if (dis.duration > 3800)
+  stream  << "quite";
+  if (dis.duration > 6700)
+  stream  << "very";
+    if (dis.duration > 11050)
+  stream  << "extremely";
+  stream  << " strange and require more food and water\n\
+  than usual.";
+  return stream.str();
 
  default:
   return "Who knows?  This is probably a bug.";

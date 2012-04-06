@@ -516,14 +516,17 @@ void iuse::blech(game *g, player *p, item *it, bool t)
 
 void iuse::mutagen(game *g, player *p, item *it, bool t)
 {
- p->mutate(g);
+p->add_disease(DI_MUTATE,rng(3400, 3800), g);
+}
+
+void iuse::mutagen_2(game *g, player *p, item *it, bool t)
+{
+p->add_disease(DI_MUTATE,rng(6700, 7450), g);
 }
 
 void iuse::mutagen_3(game *g, player *p, item *it, bool t)
 {
- p->mutate(g);
- p->mutate(g);
- p->mutate(g);
+p->add_disease(DI_MUTATE,rng(10300, 11050), g);
 }
 
 void iuse::purifier(game *g, player *p, item *it, bool t)
@@ -1279,7 +1282,7 @@ case 2:{
  g->draw();
  mvprintw(0, 0, "Fell which tree?");
  get_direction(dirx, diry, input());
- if (dirx == -2) { 
+ if (dirx == -2) {
   g->add_msg("Invalid direction.");
   return;
  }
@@ -2171,7 +2174,7 @@ case 1:{
  g->draw();
  mvprintw(0, 0, "Fell which tree?");
  get_direction(dirx, diry, input());
- if (dirx == -2) { 
+ if (dirx == -2) {
   g->add_msg("Invalid direction.");
   return;
  }

@@ -7,8 +7,6 @@
 #include "setvector.h"
 #include "inventory.h"
 
-#define PICKUP_RANGE 2
-
 void draw_recipe_tabs(WINDOW *w, craft_cat tab);
 
 // This function just defines the recipes used throughout the game.
@@ -42,14 +40,14 @@ recipes.push_back( new recipe(id, result, category, skill1, skill2, difficulty,\
   COMP(itm_knife_steak, 2, itm_knife_combat, 1, NULL);
   COMP(itm_string_36, 1, NULL);
 
- RECIPE(itm_longbow, CC_WEAPON, sk_archery, sk_survival, 2, 15000);
+ RECIPE(itm_longbow, CC_RANGED, sk_archery, sk_survival, 2, 15000);
   TOOL(itm_hatchet, -1, itm_knife_steak, -1, itm_knife_butcher, -1,
        itm_knife_combat, -1, itm_machete, -1,
        itm_carving_knife, -1, itm_toolset, -1, NULL);
   COMP(itm_stick, 1, NULL);
   COMP(itm_string_36, 2, NULL);
 
- RECIPE(itm_arrow_wood, CC_WEAPON, sk_archery, sk_survival, 1, 5000);
+ RECIPE(itm_arrow_wood, CC_RANGED, sk_archery, sk_survival, 1, 5000);
   TOOL(itm_hatchet, -1, itm_knife_steak, -1, itm_knife_butcher, -1,
        itm_knife_combat, -1, itm_machete, -1,
        itm_carving_knife, -1, itm_toolset, -1, NULL);
@@ -61,49 +59,49 @@ recipes.push_back( new recipe(id, result, category, skill1, skill2, difficulty,\
   COMP(itm_2x4, 1, itm_bat, 1, itm_handle, 1, NULL);
   COMP(itm_nail, 6, NULL);
 
- RECIPE(itm_molotov, CC_WEAPON, sk_null, sk_null, 0, 500);
+ RECIPE(itm_molotov, CC_RANGED, sk_null, sk_null, 0, 500);
   COMP(itm_rag, 1, NULL);
   COMP(itm_whiskey, -1, itm_vodka, -1, itm_rum, -1, itm_tequila, -1,
        itm_gasoline, -1, NULL);
 
- RECIPE(itm_pipebomb, CC_WEAPON, sk_mechanics, sk_null, 1, 750);
+ RECIPE(itm_pipebomb, CC_RANGED, sk_mechanics, sk_null, 1, 750);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   COMP(itm_pipe, 1, NULL);
   COMP(itm_gasoline, 1, itm_shot_bird, 6, itm_shot_00, 2, itm_shot_slug, 2,
        NULL);
   COMP(itm_string_36, 1, itm_string_6, 1, NULL);
 
- RECIPE(itm_shotgun_sawn, CC_WEAPON, sk_gun, sk_null, 1, 500);
+ RECIPE(itm_shotgun_sawn, CC_RANGED, sk_gun, sk_null, 1, 500);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   COMP(itm_shotgun_d, 1, itm_remington_870, 1, itm_mossberg_500, 1,
      itm_saiga_12, 1, NULL);
 
- RECIPE(itm_bolt_wood, CC_WEAPON, sk_mechanics, sk_archery, 1, 5000);
+ RECIPE(itm_bolt_wood, CC_RANGED, sk_mechanics, sk_archery, 1, 5000);
   TOOL(itm_hatchet, -1, itm_knife_steak, -1, itm_knife_butcher, -1,
        itm_knife_combat, -1, itm_machete, -1, 
        itm_carving_knife, -1, itm_toolset, -1, NULL);
   COMP(itm_stick, 1, itm_broom, 1, itm_mop, 1, itm_2x4, 1, itm_bee_sting, 1,
        NULL);
 
- RECIPE(itm_crossbow, CC_WEAPON, sk_mechanics, sk_archery, 3, 15000);
+ RECIPE(itm_crossbow, CC_RANGED, sk_mechanics, sk_archery, 3, 15000);
   TOOL(itm_wrench, -1, NULL);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   COMP(itm_2x4, 1, itm_stick, 4, NULL);
   COMP(itm_hose, 1, NULL);
 
- RECIPE(itm_rifle_22, CC_WEAPON, sk_mechanics, sk_gun, 3, 12000);
+ RECIPE(itm_rifle_22, CC_RANGED, sk_mechanics, sk_gun, 3, 12000);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   COMP(itm_pipe, 1, NULL);
   COMP(itm_2x4, 1, NULL);
 
- RECIPE(itm_rifle_9mm, CC_WEAPON, sk_mechanics, sk_gun, 3, 14000);
+ RECIPE(itm_rifle_9mm, CC_RANGED, sk_mechanics, sk_gun, 3, 14000);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   COMP(itm_pipe, 1, NULL);
   COMP(itm_2x4, 1, NULL);
 
- RECIPE(itm_smg_9mm, CC_WEAPON, sk_mechanics, sk_gun, 5, 18000);
+ RECIPE(itm_smg_9mm, CC_RANGED, sk_mechanics, sk_gun, 5, 18000);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   TOOL(itm_hammer, -1, itm_rock, -1, itm_hatchet, -1, NULL);
@@ -111,7 +109,7 @@ recipes.push_back( new recipe(id, result, category, skill1, skill2, difficulty,\
   COMP(itm_2x4, 2, NULL);
   COMP(itm_nail, 4, NULL);
 
- RECIPE(itm_smg_45, CC_WEAPON, sk_mechanics, sk_gun, 5, 20000);
+ RECIPE(itm_smg_45, CC_RANGED, sk_mechanics, sk_gun, 5, 20000);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   TOOL(itm_hammer, -1, itm_rock, -1, itm_hatchet, -1, NULL);
@@ -119,26 +117,26 @@ recipes.push_back( new recipe(id, result, category, skill1, skill2, difficulty,\
   COMP(itm_2x4, 2, NULL);
   COMP(itm_nail, 4, NULL);
 
- RECIPE(itm_flamethrower_simple, CC_WEAPON, sk_mechanics, sk_gun, 6, 12000);
+ RECIPE(itm_flamethrower_simple, CC_RANGED, sk_mechanics, sk_gun, 6, 12000);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   COMP(itm_pipe, 1, NULL);
   COMP(itm_hose, 2, NULL);
   COMP(itm_bottle_glass, 4, itm_bottle_plastic, 6, NULL);
 
- RECIPE(itm_launcher_simple, CC_WEAPON, sk_mechanics, sk_launcher, 6, 6000);
+ RECIPE(itm_launcher_simple, CC_RANGED, sk_mechanics, sk_launcher, 6, 6000);
   TOOL(itm_hacksaw, -1, itm_toolset, -1, NULL);
   COMP(itm_pipe, 1, NULL);
   COMP(itm_2x4, 1, NULL);
   COMP(itm_nail, 1, NULL);
 
- RECIPE(itm_shot_he, CC_WEAPON, sk_mechanics, sk_gun, 4, 2000);
+ RECIPE(itm_shot_he, CC_RANGED, sk_mechanics, sk_gun, 4, 2000);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   COMP(itm_superglue, 1, NULL);
   COMP(itm_shot_slug, 4, NULL);
   COMP(itm_gasoline, 1, NULL);
 
- RECIPE(itm_grenade, CC_WEAPON, sk_mechanics, sk_null, 2, 5000);
+ RECIPE(itm_grenade, CC_RANGED, sk_mechanics, sk_null, 2, 5000);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   COMP(itm_superglue, 1, itm_string_36, 1, NULL);
   COMP(itm_can_food, 1, itm_can_drink, 1, itm_canister_empty, 1, NULL);
@@ -153,7 +151,7 @@ recipes.push_back( new recipe(id, result, category, skill1, skill2, difficulty,\
   COMP(itm_motor, 1, NULL);
   COMP(itm_chain, 1, NULL);
 
- RECIPE(itm_smokebomb, CC_WEAPON, sk_cooking, sk_mechanics, 3, 7500);
+ RECIPE(itm_smokebomb, CC_RANGED, sk_cooking, sk_mechanics, 3, 7500);
   TOOL(itm_screwdriver, -1, itm_wrench, -1, itm_toolset, -1, NULL);
   COMP(itm_water, 1, itm_salt_water, 1, NULL);
   COMP(itm_candy, 1, itm_cola, 1, NULL);
@@ -161,14 +159,14 @@ recipes.push_back( new recipe(id, result, category, skill1, skill2, difficulty,\
   COMP(itm_canister_empty, 1, itm_can_food, 1, NULL);
   COMP(itm_superglue, 1, NULL);
 
- RECIPE(itm_gasbomb, CC_WEAPON, sk_cooking, sk_mechanics, 4, 8000);
+ RECIPE(itm_gasbomb, CC_RANGED, sk_cooking, sk_mechanics, 4, 8000);
   TOOL(itm_screwdriver, -1, itm_wrench, -1, itm_toolset, -1, NULL);
   COMP(itm_bleach, 2, NULL);
   COMP(itm_ammonia, 2, NULL);
   COMP(itm_canister_empty, 1, itm_can_food, 1, NULL);
   COMP(itm_superglue, 1, NULL);
 
- RECIPE(itm_mininuke, CC_WEAPON, sk_mechanics, sk_electronics, 10, 40000);
+ RECIPE(itm_mininuke, CC_RANGED, sk_mechanics, sk_electronics, 10, 40000);
   TOOL(itm_screwdriver, -1, itm_toolset, -1, NULL);
   TOOL(itm_wrench, -1, itm_toolset, -1, NULL);
   COMP(itm_can_food, 2, itm_steel_chunk, 2, itm_canister_empty, 1, NULL);
@@ -242,33 +240,33 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   TOOL(itm_pan, -1, itm_pot, -1, NULL);
   COMP(itm_potato_raw, 1, NULL);
 
- RECIPE(itm_tea, CC_FOOD, sk_cooking, sk_null, 0, 4000);
+ RECIPE(itm_tea, CC_DRINK, sk_cooking, sk_null, 0, 4000);
   TOOL(itm_hotplate, 2, itm_toolset, 1, itm_fire, -1, NULL);
   TOOL(itm_pot, -1, NULL);
   TOOL(itm_bottle_plastic, -1, NULL);
   COMP(itm_tea_raw, 1, NULL);
   COMP(itm_water, 1, NULL);
 
- RECIPE(itm_coffee, CC_FOOD, sk_cooking, sk_null, 0, 4000);
+ RECIPE(itm_coffee, CC_DRINK, sk_cooking, sk_null, 0, 4000);
   TOOL(itm_hotplate, 2, itm_toolset, 1, itm_fire, -1, NULL);
   TOOL(itm_pot, -1, NULL);
   TOOL(itm_bottle_plastic, -1, NULL);
   COMP(itm_coffee_raw, 1, NULL);
   COMP(itm_water, 1, NULL);
 
- RECIPE(itm_oj, CC_FOOD, sk_cooking, sk_null, 1, 5000);
+ RECIPE(itm_oj, CC_DRINK, sk_cooking, sk_null, 1, 5000);
   TOOL(itm_rock, -1, itm_toolset, -1, NULL);
   TOOL(itm_bottle_plastic, -1, NULL);
   COMP(itm_orange, 2, NULL);
   COMP(itm_water, 1, NULL);
 
- RECIPE(itm_water_boiled, CC_FOOD, sk_cooking, sk_null, 0, 5000);
+ RECIPE(itm_water_boiled, CC_DRINK, sk_cooking, sk_null, 0, 5000);
   TOOL(itm_pot, -1, NULL);
   TOOL(itm_fire, -1, NULL);
   TOOL(itm_bottle_plastic, -1, NULL);
   COMP(itm_water, 2, NULL);
 
- RECIPE(itm_apple_cider, CC_FOOD, sk_cooking, sk_null, 2, 7000);
+ RECIPE(itm_apple_cider, CC_DRINK, sk_cooking, sk_null, 2, 7000);
   TOOL(itm_rock, -1, itm_toolset, -1, NULL);
   COMP(itm_bottle_plastic, 1, NULL);
   COMP(itm_apple, 3, NULL);
@@ -278,7 +276,7 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   COMP(itm_salt_water, 1, itm_salt, 4, NULL);
   COMP(itm_meat, 1, NULL);
 
- RECIPE(itm_V8, CC_FOOD, sk_cooking, sk_null, 2, 5000);
+ RECIPE(itm_V8, CC_DRINK, sk_cooking, sk_null, 2, 5000);
   TOOL(itm_bottle_plastic, -1, NULL);
   COMP(itm_tomato, 1, NULL);
   COMP(itm_broccoli, 1, NULL);
@@ -321,7 +319,7 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   COMP(itm_sauce_pesto, 1, itm_sauce_red, 1, NULL);
   COMP(itm_water, 1, NULL);
 
- RECIPE(itm_meth, CC_FOOD, sk_cooking, sk_null, 4, 20000);
+ RECIPE(itm_meth, CC_CHEMS, sk_cooking, sk_null, 4, 20000);
   TOOL(itm_hotplate, 15, itm_toolset, 8, itm_fire, -1, NULL);
   TOOL(itm_bottle_glass, -1, itm_hose, -1, NULL);
   COMP(itm_dayquil, 2, itm_royal_jelly, 1, NULL);
@@ -332,20 +330,20 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   COMP(itm_honeycomb, 1, NULL);
   COMP(itm_bleach, 2, itm_purifier, 1, NULL);
 
- RECIPE(itm_heroin, CC_FOOD, sk_cooking, sk_null, 6, 2000);
+ RECIPE(itm_heroin, CC_CHEMS, sk_cooking, sk_null, 6, 2000);
   TOOL(itm_hotplate, 3, itm_toolset, 2, itm_fire, -1, NULL);
   TOOL(itm_pan, -1, itm_pot, -1, NULL);
   COMP(itm_salt_water, 1, itm_salt, 4, NULL);
   COMP(itm_oxycodone, 40, NULL);
 
- RECIPE(itm_mutagen, CC_FOOD, sk_cooking, sk_firstaid, 8, 10000);
+ RECIPE(itm_mutagen, CC_CHEMS, sk_cooking, sk_firstaid, 8, 10000);
   TOOL(itm_hotplate, 25, itm_toolset, 12, itm_fire, -1, NULL);
   COMP(itm_meat_tainted, 3, itm_veggy_tainted, 5, itm_fetus, 1, itm_arm, 2,
        itm_leg, 2, NULL);
   COMP(itm_bleach, 2, NULL);
   COMP(itm_ammonia, 1, NULL);
 
- RECIPE(itm_purifier, CC_FOOD, sk_cooking, sk_firstaid, 9, 10000);
+ RECIPE(itm_purifier, CC_CHEMS, sk_cooking, sk_firstaid, 9, 10000);
   TOOL(itm_hotplate, 25, itm_toolset, 12, itm_fire, -1, NULL);
   COMP(itm_royal_jelly, 3, itm_mutagen, 1, NULL);
   COMP(itm_bleach, 3, NULL);
@@ -669,18 +667,18 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   COMP(itm_handle, 1, NULL);
 
 // MISC
- RECIPE(itm_handle, CC_MISC, sk_null, sk_null, 0, 5000);
+ RECIPE(itm_handle, CC_WOOD, sk_null, sk_null, 0, 5000);
   TOOL(itm_hatchet, -1, itm_hacksaw, -1, itm_knife_butcher, -1, itm_saw, -1,
        itm_carving_knife, -1, NULL);
   COMP(itm_2x4, 1, itm_stick, 1, NULL);
 
- RECIPE(itm_door, CC_MISC, sk_carpentry, sk_null, 1, 7000);
+ RECIPE(itm_door, CC_WOOD, sk_carpentry, sk_null, 1, 7000);
   TOOL(itm_hammer, -1, itm_hatchet, -1, NULL);
   COMP(itm_2x4, 8, NULL);
   COMP(itm_steel_chunk, NULL);
   COMP(itm_nail, 20, NULL);
 
- RECIPE(itm_barricade, CC_MISC, sk_null,    sk_null, 0, 10000);
+ RECIPE(itm_barricade, CC_WOOD, sk_null,    sk_null, 0, 10000);
   TOOL(itm_hammer, -1, itm_hatchet, -1, itm_nailgun, -1, NULL);
   COMP(itm_2x4, 3, NULL);
   COMP(itm_spear_wood, 5, NULL);
@@ -692,11 +690,11 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   COMP(itm_carbattery, 1, NULL);
   COMP(itm_spear_wood, 2, NULL);
 
- RECIPE(itm_stake,     CC_MISC, sk_null, sk_null, 0, 1000);
+ RECIPE(itm_stake,     CC_WOOD, sk_null, sk_null, 0, 1000);
   TOOL(itm_hatchet, -1, itm_hammer, -1, itm_rock, -1, NULL);
   COMP(itm_rock, 1, NULL);
 
- RECIPE(itm_crossbar,  CC_MISC, sk_null, sk_null, 0, 1000);
+ RECIPE(itm_crossbar,  CC_WOOD, sk_null, sk_null, 0, 1000);
   TOOL(itm_hatchet, -1, itm_hammer, -1, itm_rock, -1, NULL);
   COMP(itm_2x4, 6, itm_log, 1, NULL);
   COMP(itm_nail, 8, itm_stake, 1, NULL);
@@ -705,6 +703,23 @@ RECIPE(itm_c4, CC_WEAPON, sk_mechanics, sk_electronics, 4, 8000);
   TOOL(itm_hotplate, 5, itm_toolset, 3, itm_fire, -1, NULL);
   COMP(itm_water, 1, NULL);
   COMP(itm_bleach, 1, itm_ant_egg, 1, NULL);
+
+ RECIPE(itm_frame, CC_MISC, sk_mechanics, sk_null, 1, 8000);
+  TOOL(itm_welder, 50, NULL);
+  COMP(itm_steel_lump, 3, NULL);
+
+ RECIPE(itm_steel_plate, CC_MISC, sk_mechanics, sk_null,4, 12000);
+  TOOL(itm_welder, 100, NULL);
+  COMP(itm_steel_lump, 8, NULL);
+
+ RECIPE(itm_spiked_plate, CC_MISC, sk_mechanics, sk_null, 4, 12000);
+  TOOL(itm_welder, 120, NULL);
+  COMP(itm_steel_lump, 8, NULL);
+  COMP(itm_steel_chunk, 4, NULL);
+
+ RECIPE(itm_hard_plate, CC_MISC, sk_mechanics, sk_null, 4, 12000);
+  TOOL(itm_welder, 300, NULL);
+  COMP(itm_steel_lump, 24, NULL);
 
  RECIPE(itm_crowbar, CC_MISC, sk_mechanics, sk_null, 1, 1000);
   TOOL(itm_hatchet, -1, itm_hammer, -1, itm_rock, -1, itm_toolset, -1, NULL);
@@ -1060,6 +1075,17 @@ void draw_recipe_tabs(WINDOW *w, craft_cat tab)
   mvwputch(w, 1,  2, h_ltgray, '<');
   mvwputch(w, 1, 16, h_ltgray, '>');
   break;
+
+ case CC_RANGED:
+  for (int i = 5; i < 14; i++)
+   mvwputch(w, 2, i, c_black, ' ');
+  mvwprintz(w, 1, 6, h_ltgray, "RANGED ");
+  mvwputch(w, 2,  4, c_ltgray, LINE_XOOX);
+  mvwputch(w, 2, 14, c_ltgray, LINE_XXOO);
+  mvwputch(w, 1,  2, h_ltgray, '<');
+  mvwputch(w, 1, 16, h_ltgray, '>');
+  break;
+
  case CC_SMITH:
   for (int i = 5; i < 14; i++)
    mvwputch(w, 2, i, c_black, ' ');
@@ -1072,7 +1098,7 @@ void draw_recipe_tabs(WINDOW *w, craft_cat tab)
  case CC_WOOD:
   for (int i = 5; i < 14; i++)
    mvwputch(w, 2, i, c_black, ' ');
-  mvwprintz(w, 1, 4, h_ltgray, "WOODWORKING");
+  mvwprintz(w, 1, 5, h_ltgray, "WOODCRAFT");
   mvwputch(w, 2,  4, c_ltgray, LINE_XOOX);
   mvwputch(w, 2, 14, c_ltgray, LINE_XXOO);
   mvwputch(w, 1,  2, h_ltgray, '<');
@@ -1087,6 +1113,27 @@ void draw_recipe_tabs(WINDOW *w, craft_cat tab)
   mvwputch(w, 1, 18, h_ltgray, '<');
   mvwputch(w, 1, 29, h_ltgray, '>');
   break;
+
+ case CC_DRINK:
+  for (int i = 21; i < 27; i++)
+   mvwputch(w, 2, i, c_black, ' ');
+  mvwprintz(w, 1, 21, h_ltgray, "DRINK");
+  mvwputch(w, 2, 20, c_ltgray, LINE_XOOX);
+  mvwputch(w, 2, 27, c_ltgray, LINE_XXOO);
+  mvwputch(w, 1, 18, h_ltgray, '<');
+  mvwputch(w, 1, 29, h_ltgray, '>');
+  break;
+
+ case CC_CHEMS:
+  for (int i = 21; i < 27; i++)
+   mvwputch(w, 2, i, c_black, ' ');
+  mvwprintz(w, 1, 21, h_ltgray, "CHEMS");
+  mvwputch(w, 2, 20, c_ltgray, LINE_XOOX);
+  mvwputch(w, 2, 27, c_ltgray, LINE_XXOO);
+  mvwputch(w, 1, 18, h_ltgray, '<');
+  mvwputch(w, 1, 29, h_ltgray, '>');
+  break;
+
  case CC_ELECTRONIC:
   for (int i = 34; i < 47; i++)
    mvwputch(w, 2, i, c_black, ' ');

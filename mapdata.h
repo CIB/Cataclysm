@@ -9,6 +9,7 @@
 #include "monster.h"
 #include "enums.h"
 #include "computer.h"
+#include "vehicle.h"
 
 class game;
 class monster;
@@ -51,6 +52,7 @@ enum t_flag {
  console,      // Used as a computer
  alarmed,      // Sets off an alarm if smashed
  supports_roof,// Used as a boundary for roof construction
+ thin_obstacle,// obstacles that can be passed by player and monsters, and can't by vehicles
  num_t_flags   // MUST be last
 };
 
@@ -325,13 +327,13 @@ const ter_t terlist[num_terrain_types] = {  // MUST match enum ter_id above!
 {"wax floor",        '.', c_yellow,  2,
 	mfb(transparent)|mfb(inflammable)},
 {"picket fence",     '|', c_brown,   3,
-	mfb(transparent)|mfb(diggable)|mfb(inflammable)|mfb(noitem)},
+	mfb(transparent)|mfb(diggable)|mfb(inflammable)|mfb(noitem)|mfb(thin_obstacle)},
 {"picket fence",     '-', c_brown,   3,
-	mfb(transparent)|mfb(diggable)|mfb(inflammable)|mfb(noitem)},
+	mfb(transparent)|mfb(diggable)|mfb(inflammable)|mfb(noitem)|mfb(thin_obstacle)},
 {"railing",          '|', c_yellow,  3,
-	mfb(transparent)|mfb(noitem)},
+	mfb(transparent)|mfb(noitem)|mfb(thin_obstacle)},
 {"railing",          '-', c_yellow,  3,
-	mfb(transparent)|mfb(noitem)},
+	mfb(transparent)|mfb(noitem)|mfb(thin_obstacle)},
 {"marloss bush",     '1', c_dkgray,  0,
 	mfb(transparent)|mfb(bashable)|mfb(inflammable)},
 {"fungal bed",       '#', c_dkgray,  3,
@@ -671,6 +673,7 @@ struct submap {
  int active_item_count;
  int field_count;
  std::vector<spawn_point> spawns;
+ std::vector<vehicle> vehicles;
  computer comp;
 };
 

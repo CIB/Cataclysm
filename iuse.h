@@ -37,6 +37,7 @@ class iuse
   void inhaler		(game *g, player *p, item *it, bool t);
   void blech		(game *g, player *p, item *it, bool t);
   void mutagen		(game *g, player *p, item *it, bool t);
+  void mutagen_2	(game *g, player *p, item *it, bool t);
   void mutagen_3	(game *g, player *p, item *it, bool t);
   void purifier		(game *g, player *p, item *it, bool t);
   void marloss		(game *g, player *p, item *it, bool t);
@@ -122,7 +123,7 @@ class iuse
   void growth		(game *g, player *p, item *it, bool t);
   void water		(game *g, player *p, item *it, bool t);
   void lava		(game *g, player *p, item *it, bool t);
-  
+
 };
 
 #endif
