@@ -10,7 +10,7 @@
 
 //      LINE_NESW  - X for on, O for off
 #ifndef LINE_XOXO
-    #if (defined _WIN32 || defined __WIN32__) && ! defined __CYGWIN__
+    #if (defined _WIN32 || defined __WIN32__ || defined __TILESET) && ! defined __CYGWIN__
         // have to inline the pdcurses stuff here, since catacurses.h doesn't support it
         #ifdef CHTYPE_LONG
         # define ACS_PICK(w, n) ((chtype)w | A_ALTCHARSET)
