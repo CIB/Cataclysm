@@ -1,7 +1,7 @@
 #ifndef _MAP_H_
 #define _MAP_H_
 
-#if (defined _WIN32 || defined WINDOWS)
+#ifdef __TILESET
 	#include "catacurse.h"
 #else
 	#include <curses.h>

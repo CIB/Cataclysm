@@ -1,7 +1,7 @@
 #ifndef _COLOR_H_
 #define _COLOR_H
 
-#if (defined _WIN32 || defined WINDOWS)
+#ifdef __TILESET
 	#include "catacurse.h"
 #else
 	#include <curses.h>
