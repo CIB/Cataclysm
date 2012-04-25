@@ -1,7 +1,7 @@
 #ifndef _OUTPUT_CPP_
 #define _OUTPUT_CPP_
 
-#if (defined _WIN32 || defined WINDOWS)
+#ifdef __TILESET
 	#include "catacurse.h"
 #else
 	#include <curses.h>

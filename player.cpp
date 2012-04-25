@@ -11,7 +11,7 @@
 #include <sstream>
 #include <stdlib.h>
 
-#if (defined _WIN32 || defined WINDOWS)
+#ifdef __TILESET
 	#include "catacurse.h"
 #else
 	#include <curses.h>
